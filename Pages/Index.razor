@@ -1,0 +1,51 @@
+﻿@page "/"
+
+@inject HttpClient http;
+<h1>Agreements List</h1>
+
+@if (agreements == null)
+{
+    <p><em>Getting Agreements..</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in agreements)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>@item.Amount</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    List<AgreementsModel> agreements = new List<AgreementsModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        agreements = await http.GetJsonAsync<List<AgreementsModel>>("https://localhost:44328/Agreements");
+    }
+
+    public class AgreementsModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public int Amount { get; set; }
+    }
+}
